@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="184" height="28" viewBox="0 0 184 28" font-family="'IBM Plex Mono','Segoe UI',monospace">
+  <rect x="0.5" y="0.5" width="183" height="27" rx="14.0" fill="#101a2e" stroke="#7C86FF" stroke-opacity="0.55"/>
+  <circle cx="19" cy="14.0" r="4.5" fill="#7C86FF"/>
+  <text x="32" y="18.5" font-size="13" font-weight="600" fill="#D6DEEE">live on Arc testnet</text>
+</svg>

@@ -1,4 +1,12 @@
-# clearloop
+<p align="center">
+  <img src=".github/assets/banner.svg" alt="Clearloop — multilateral clearing for the agent economy" width="100%">
+</p>
+
+<p align="center">
+  <img src=".github/assets/badge-tests.svg" alt="15 tests passing">&nbsp;
+  <img src=".github/assets/badge-arc.svg" alt="live on Arc testnet">&nbsp;
+  <img src=".github/assets/badge-x402.svg" alt="x402 · Nanopayments-compatible">
+</p>
 
 **Multilateral clearing for the agent economy — settle the net, not the gross.** Autonomous agents are buyers *and* sellers at once, so their mutual obligations form a graph, not a line. Clearloop offsets every agent's receivables against its payables across that graph and settles only net USDC on Arc — freeing the working capital that per-payer batching leaves locked.
 
