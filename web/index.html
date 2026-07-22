@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Clearloop — clearing floor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;450;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1220; --ink-2:#0E1626; --surface:#121C30; --surface-2:#16223A;
+    --line:#22304C; --text:#E7ECF6; --muted:#8A96AE; --faint:#4C5B78;
+    --owes:#E8A33D;     /* net debtor — money out */
+    --owed:#35C2A5;     /* net creditor — money in */
+    --net:#7C86FF;      /* settlement arcs + hero figure */
+    --net-soft:#7C86FF33;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:
+      radial-gradient(1200px 700px at 78% -10%, #16223a55, transparent 60%),
+      radial-gradient(900px 600px at -10% 110%, #12305033, transparent 55%),
+      var(--ink);
+    color:var(--text);
+    font-family:"Inter",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:34px 26px 48px;}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--net);opacity:.9}
+  h1{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:clamp(28px,4vw,44px);line-height:1.02;margin:.28em 0 .18em;letter-spacing:-.015em}
+  .sub{color:var(--muted);max-width:46ch;font-size:14.5px;line-height:1.5}
+  .badge{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 12px;white-space:nowrap}
+  .badge b{color:var(--owed);font-weight:600}
+
+  .stage{display:grid;grid-template-columns:1.35fr .95fr;gap:22px;margin-top:26px}
+  @media (max-width:880px){.stage{grid-template-columns:1fr}}
+
+  .floor{position:relative;background:linear-gradient(180deg,var(--ink-2),#0a1120);border:1px solid var(--line);border-radius:18px;padding:8px;overflow:hidden}
+  .floor svg{display:block;width:100%;height:auto}
+  .floorcap{position:absolute;left:16px;bottom:12px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+
+  .panel{display:flex;flex-direction:column;gap:14px}
+  .controls{display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .seg{display:flex;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:3px}
+  .seg button{flex:1;background:transparent;border:0;color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:12px;padding:9px 8px;border-radius:8px;cursor:pointer;transition:.18s}
+  .seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
+  .row{display:flex;gap:10px}
+  .btn{flex:1;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:14.5px;padding:13px 14px;border-radius:11px;border:1px solid transparent;cursor:pointer;transition:.18s;color:#0b1220;background:var(--net);}
+  .btn:hover{filter:brightness(1.08)}
+  .btn:disabled{opacity:.45;cursor:default;filter:none}
+  .btn.ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+  .btn.ghost:hover{color:var(--text)}
+
+  .ledger{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 18px 8px}
+  .lgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+  .stat .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:20px;margin-top:3px;color:var(--text);font-variant-numeric:tabular-nums}
+  .hero{margin:16px 0 6px;padding-top:16px;border-top:1px solid var(--line)}
+  .hero .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .hero .v{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(40px,7vw,60px);line-height:1;color:var(--net);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .hero .note{color:var(--faint);font-size:12px;margin-top:6px;font-family:"IBM Plex Mono",monospace}
+
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:2px 2px 0}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:middle}
+  .dot-owes{background:var(--owes)} .dot-owed{background:var(--owed)} .dot-net{background:var(--net)}
+
+  .node-label{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--muted)}
+  .node-net{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:500}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Clearloop · clearing floor</div>
+      <h1>Settle the net,<br>not the gross.</h1>
+      <p class="sub">Autonomous agents owe and are owed at the same time. Clearloop offsets the whole obligation graph and moves only the difference — one net settlement per epoch on Arc.</p>
+    </div>
+    <div class="badge">Arc · USDC &nbsp;|&nbsp; tracks: <b>DeFi</b> + <b>Agentic</b></div>
+  </header>
+
+  <div class="stage">
+    <div class="floor">
+      <svg id="floor" viewBox="0 0 640 560" role="img" aria-label="Obligation graph collapsing into net settlements"></svg>
+      <div class="floorcap" id="floorcap">gross obligations</div>
+    </div>
+
+    <div class="panel">
+      <div class="controls">
+        <div class="seg" role="tablist" aria-label="Scenario">
+          <button id="scn-demo" aria-pressed="true">Demo · 3 agents</button>
+          <button id="scn-dense" aria-pressed="false">Dense · 15 agents</button>
+        </div>
+        <div class="row">
+          <button class="btn" id="run">Run clearing epoch</button>
+          <button class="btn ghost" id="reset" disabled>Reset</button>
+        </div>
+        <div class="legend">
+          <span><i class="dot-owes"></i>net debtor (owes)</span>
+          <span><i class="dot-owed"></i>net creditor (owed)</span>
+          <span><i class="dot-net"></i>net settlement</span>
+        </div>
+      </div>
+
+      <div class="ledger">
+        <div class="lgrid">
+          <div class="stat"><div class="k">Gross obligations</div><div class="v" id="s-gross">$0</div></div>
+          <div class="stat"><div class="k">USDC moved</div><div class="v" id="s-net">$0</div></div>
+          <div class="stat"><div class="k">Payments</div><div class="v" id="s-obs">0</div></div>
+          <div class="stat"><div class="k">Settlements</div><div class="v" id="s-settle">0</div></div>
+        </div>
+        <div class="hero">
+          <div class="k">Capital freed</div>
+          <div class="v" id="s-freed">0.0%</div>
+          <div class="note" id="s-note">run an epoch to clear the graph</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SVGNS="http://www.w3.org/2000/svg";
+const U=1_000_000n;
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt=v=>{const neg=v<0n;let a=neg?-v:v;const w=a/U;const f=(a%U).toString().padStart(6,"0").replace(/0+$/,"");return (neg?"-":"")+"$"+w+(f?"."+f:"");};
+
+// ---- netting engine (mirrors src/netting.ts) ----
+function netGraph(obs){
+  const pos=new Map(); let gross=0n;
+  for(const o of obs){
+    pos.set(o.debtor,(pos.get(o.debtor)??0n)-o.amount);
+    pos.set(o.creditor,(pos.get(o.creditor)??0n)+o.amount);
+    gross+=o.amount;
+  }
+  let net=0n; for(const v of pos.values()) if(v<0n) net+=-v;
+  const settlements=minimalTransfers(pos);
+  const freedBps=gross===0n?0:Number((gross-net)*10000n/gross);
+  return {pos,members:[...pos.keys()],gross,net,freedBps,settlements};
+}
+function minimalTransfers(pos){
+  const d=[],c=[];
+  for(const [a,v] of pos){ if(v<0n)d.push({a,v:-v}); else if(v>0n)c.push({a,v}); }
+  const by=(x,y)=>y.v>x.v?1:y.v<x.v?-1:0; d.sort(by); c.sort(by);
+  const out=[]; let i=0,j=0;
+  while(i<d.length&&j<c.length){
+    const p=d[i].v<c[j].v?d[i].v:c[j].v;
+    out.push({from:d[i].a,to:c[j].a,amount:p});
+    d[i].v-=p; c[j].v-=p; if(d[i].v===0n)i++; if(c[j].v===0n)j++;
+  }
+  return out;
+}
+
+// ---- scenarios ----
+function demo(){
+  const A="Alice",B="Bob",C="Carol";
+  return [
+    {debtor:A,creditor:B,amount:40n*U},{debtor:B,creditor:C,amount:40n*U},
+    {debtor:C,creditor:A,amount:40n*U},{debtor:A,creditor:C,amount:25n*U},
+    {debtor:C,creditor:B,amount:10n*U},
+  ];
+}
+function dense(n=15,edges=200,seed=1337){
+  const ag=Array.from({length:n},(_,i)=>"a"+String(i).padStart(2,"0"));
+  let s=seed; const r=()=>(s=(s*1103515245+12345)&0x7fffffff)/0x7fffffff;
+  const obs=[];
+  for(let k=0;k<edges;k++){
+    const a=ag[Math.floor(r()*n)]; let b=ag[Math.floor(r()*n)];
+    if(a===b) b=ag[(ag.indexOf(a)+1)%n];
+    obs.push({debtor:a,creditor:b,amount:BigInt(1+Math.floor(r()*100))*U});
+  }
+  return obs;
+}
+
+// ---- layout + render ----
+const svg=document.getElementById("floor");
+const W=640,H=560,CX=320,CY=270,R=195;
+let state={obs:demo(),scn:"demo",phase:"gross",layout:new Map()};
+
+function computeLayout(members){
+  const m=new Map(); const N=members.length;
+  members.forEach((mem,i)=>{
+    const ang=-Math.PI/2 + i*2*Math.PI/N;
+    m.set(mem,{x:CX+R*Math.cos(ang),y:CY+R*Math.sin(ang),ang});
+  });
+  return m;
+}
+function el(tag,attrs){const e=document.createElementNS(SVGNS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+function chordPath(p,q,pull){
+  const mx=(p.x+q.x)/2,my=(p.y+q.y)/2;
+  const cx=mx+(CX-mx)*pull, cy=my+(CY-my)*pull;
+  return `M${p.x.toFixed(1)},${p.y.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${q.x.toFixed(1)},${q.y.toFixed(1)}`;
+}
+
+function render(){
+  svg.innerHTML="";
+  const g=netGraph(state.obs);
+  state.layout=computeLayout(g.members);
+  const big=g.members.length>6;
+  const maxAmt=state.obs.reduce((m,o)=>o.amount>m?o.amount:m,1n);
+
+  // defs: arrowhead for settlements
+  const defs=el("defs",{});
+  const mk=el("marker",{id:"arH",viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"});
+  mk.appendChild(el("path",{d:"M0,0 L10,5 L0,10 z",fill:css("--net")})); defs.appendChild(mk); svg.appendChild(defs);
+
+  // edges layer
+  const edges=el("g",{id:"edges"}); svg.appendChild(edges);
+  if(state.phase==="gross"){
+    state.obs.forEach(o=>{
+      const p=state.layout.get(o.debtor),q=state.layout.get(o.creditor);
+      const w=big?1:1+Number(o.amount*6n/maxAmt);
+      edges.appendChild(el("path",{d:chordPath(p,q,big?0.62:0.5),fill:"none",stroke:css("--faint"),"stroke-width":w,"stroke-opacity":big?0.5:0.8,"stroke-linecap":"round"}));
+    });
+  } else {
+    // faint ghost of gross
+    state.obs.forEach(o=>{
+      const p=state.layout.get(o.debtor),q=state.layout.get(o.creditor);
+      edges.appendChild(el("path",{d:chordPath(p,q,big?0.62:0.5),fill:"none",stroke:css("--faint"),"stroke-width":1,"stroke-opacity":0.12}));
+    });
+    // bold net settlements, animated draw
+    g.settlements.forEach((s,idx)=>{
+      const p=state.layout.get(s.from),q=state.layout.get(s.to);
+      const w=big?1.6:2+Number(s.amount*6n/maxAmt);
+      const path=el("path",{d:chordPath(p,q,big?0.55:0.42),fill:"none",stroke:css("--net"),"stroke-width":w,"stroke-linecap":"round","marker-end":"url(#arH)"});
+      const len=400;
+      path.setAttribute("stroke-dasharray",len);
+      path.setAttribute("stroke-dashoffset",len);
+      path.style.transition=`stroke-dashoffset .7s ease ${idx*0.05}s`;
+      edges.appendChild(path);
+      requestAnimationFrame(()=>{path.setAttribute("stroke-dashoffset","0");});
+    });
+  }
+
+  // nodes
+  const nodes=el("g",{id:"nodes"}); svg.appendChild(nodes);
+  g.members.forEach(mem=>{
+    const p=state.layout.get(mem); const net=g.pos.get(mem)??0n;
+    let fill=css("--faint");
+    if(state.phase==="net"){ fill = net<0n?css("--owes") : net>0n?css("--owed") : css("--faint"); }
+    const rNode=big?7:12;
+    nodes.appendChild(el("circle",{cx:p.x,cy:p.y,r:rNode+3,fill:css("--ink-2")}));
+    const c=el("circle",{cx:p.x,cy:p.y,r:rNode,fill:state.phase==="net"?fill:css("--surface-2"),stroke:fill,"stroke-width":state.phase==="net"?2:1.4});
+    nodes.appendChild(c);
+    if(!big){
+      const lx=CX+(R+26)*Math.cos(p.ang), ly=CY+(R+26)*Math.sin(p.ang);
+      const anchor=Math.cos(p.ang)>0.2?"start":Math.cos(p.ang)<-0.2?"end":"middle";
+      const t=el("text",{x:lx,y:ly+4,"text-anchor":anchor,class:"node-label"}); t.textContent=mem; nodes.appendChild(t);
+      if(state.phase==="net"){
+        const nt=el("text",{x:lx,y:ly+19,"text-anchor":anchor,class:"node-net"});
+        nt.setAttribute("fill", net<0n?css("--owes"):net>0n?css("--owed"):css("--faint"));
+        nt.textContent=(net>=0n?"+":"")+fmt(net); nodes.appendChild(nt);
+      }
+    }
+  });
+  return g;
+}
+
+// ---- ledger with count-up ----
+function animateCount(id,to,isMoney,dur=900){
+  const node=document.getElementById(id); const start=performance.now();
+  function step(t){
+    const k=Math.min(1,(t-start)/dur); const e=1-Math.pow(1-k,3);
+    if(isMoney){ const val=BigInt(Math.round(Number(to)*e)); node.textContent=fmt(val); }
+    else { node.textContent=Math.round(to*e).toString(); }
+    if(k<1)requestAnimationFrame(step); else node.textContent=isMoney?fmt(to):to.toString();
+  }
+  requestAnimationFrame(step);
+}
+function animateFreed(bps){
+  const node=document.getElementById("s-freed"); const start=performance.now(); const target=bps/100;
+  function step(t){const k=Math.min(1,(t-start)/1000);const e=1-Math.pow(1-k,3);node.textContent=(target*e).toFixed(1)+"%";if(k<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+
+function setGrossLedger(){
+  const g=netGraph(state.obs);
+  document.getElementById("s-gross").textContent=fmt(g.gross);
+  document.getElementById("s-net").textContent="$0";
+  document.getElementById("s-obs").textContent=state.obs.length.toString();
+  document.getElementById("s-settle").textContent="—";
+  document.getElementById("s-freed").textContent="0.0%";
+  document.getElementById("s-note").textContent="run an epoch to clear the graph";
+}
+
+function run(){
+  state.phase="net"; const g=render();
+  document.getElementById("floorcap").textContent="net settlements";
+  animateCount("s-gross",g.gross,true);
+  animateCount("s-net",g.net,true);
+  document.getElementById("s-obs").textContent=state.obs.length.toString();
+  animateCount("s-settle",g.settlements.length,false);
+  animateFreed(g.freedBps);
+  document.getElementById("s-note").textContent=`${state.obs.length} payments → ${g.settlements.length} settlements`;
+  document.getElementById("run").disabled=true;
+  document.getElementById("reset").disabled=false;
+}
+function reset(){
+  state.phase="gross"; render(); setGrossLedger();
+  document.getElementById("floorcap").textContent="gross obligations";
+  document.getElementById("run").disabled=false;
+  document.getElementById("reset").disabled=true;
+}
+function setScenario(scn){
+  state.scn=scn; state.obs = scn==="demo"?demo():dense();
+  document.getElementById("scn-demo").setAttribute("aria-pressed", scn==="demo");
+  document.getElementById("scn-dense").setAttribute("aria-pressed", scn==="dense");
+  reset();
+}
+
+document.getElementById("run").onclick=run;
+document.getElementById("reset").onclick=reset;
+document.getElementById("scn-demo").onclick=()=>setScenario("demo");
+document.getElementById("scn-dense").onclick=()=>setScenario("dense");
+
+// init
+render(); setGrossLedger();
+</script>
+</body>
+</html>

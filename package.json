@@ -1,0 +1,23 @@
+{
+  "name": "clearloop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "demo": "tsx src/demo.ts",
+    "e2e": "tsx src/e2e.ts",
+    "coordinator": "tsx src/coordinator-server.ts",
+    "x402": "tsx src/x402-demo.ts",
+    "credit": "tsx src/credit-demo.ts"
+  },
+  "dependencies": {
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0",
+    "@types/node": "^22.0.0"
+  }
+}
