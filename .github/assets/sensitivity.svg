@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 470" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B1220"/><stop offset="1" stop-color="#0E1626"/></linearGradient>
+  </defs>
+  <rect width="1160" height="470" fill="url(#bg)"/>
+
+  <text x="46" y="42" font-size="20" font-weight="700" fill="#E7ECF6">Capital freed is a function of graph shape — measured, not asserted</text>
+  <text x="46" y="66" font-size="13" fill="#8A96AE" font-family="'IBM Plex Mono', monospace">12-seed average · fixed seeds · npm run sweep</text>
+
+  <!-- ============ LEFT CHART: density ============ -->
+  <g transform="translate(70,110)">
+    <text x="0" y="-14" font-size="13" font-weight="600" fill="#9aa2ff" font-family="'IBM Plex Mono', monospace">DENSITY (15 agents, reciprocal)</text>
+    <!-- axes -->
+    <line x1="0" y1="0" x2="0" y2="270" stroke="#22304C" stroke-width="1.5"/>
+    <line x1="0" y1="270" x2="420" y2="270" stroke="#22304C" stroke-width="1.5"/>
+    <!-- gridlines + y labels (0-100%) -->
+    <g stroke="#22304C" stroke-dasharray="2 4" opacity="0.6">
+      <line x1="0" y1="0" x2="420" y2="0"/><line x1="0" y1="67.5" x2="420" y2="67.5"/>
+      <line x1="0" y1="135" x2="420" y2="135"/><line x1="0" y1="202.5" x2="420" y2="202.5"/>
+    </g>
+    <g font-size="11" fill="#8A96AE" font-family="'IBM Plex Mono', monospace" text-anchor="end">
+      <text x="-8" y="4">100%</text><text x="-8" y="71">75%</text>
+      <text x="-8" y="139">50%</text><text x="-8" y="206">25%</text><text x="-8" y="274">0%</text>
+    </g>
+    <!-- data: 15/44.9, 30/58.1, 60/68.4, 120/75.8, 200/81.9, 400/87.3  x = log scale over 15..400 -->
+    <!-- computed: x = 420 * (log(e)-log(15))/(log(400)-log(15)) ; y = 270 - freed*2.7 -->
+    <polyline fill="none" stroke="#7C86FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+      points="0,148.8 88,113.1 176,85.3 264,65.3 331,48.9 420,34.3"/>
+    <g fill="#7C86FF">
+      <circle cx="0" cy="148.8" r="5"/><circle cx="88" cy="113.1" r="5"/><circle cx="176" cy="85.3" r="5"/>
+      <circle cx="264" cy="65.3" r="5"/><circle cx="331" cy="48.9" r="5"/><circle cx="420" cy="34.3" r="5"/>
+    </g>
+    <g font-size="11" fill="#D6DEEE" font-family="'IBM Plex Mono', monospace" text-anchor="middle">
+      <text x="0" y="140">44.9%</text><text x="176" y="77">68.4%</text><text x="420" y="26">87.3%</text>
+    </g>
+    <g font-size="11" fill="#8A96AE" font-family="'IBM Plex Mono', monospace" text-anchor="middle">
+      <text x="0" y="290">15</text><text x="88" y="290">30</text><text x="176" y="290">60</text>
+      <text x="264" y="290">120</text><text x="331" y="290">200</text><text x="420" y="290">400</text>
+      <text x="210" y="310" fill="#4C5B78">obligations per epoch</text>
+    </g>
+  </g>
+
+  <!-- ============ RIGHT CHART: reciprocity ============ -->
+  <g transform="translate(650,110)">
+    <text x="0" y="-14" font-size="13" font-weight="600" fill="#35C2A5" font-family="'IBM Plex Mono', monospace">RECIPROCITY (15 agents, 200 obligations)</text>
+    <line x1="0" y1="0" x2="0" y2="270" stroke="#22304C" stroke-width="1.5"/>
+    <line x1="0" y1="270" x2="420" y2="270" stroke="#22304C" stroke-width="1.5"/>
+    <g stroke="#22304C" stroke-dasharray="2 4" opacity="0.6">
+      <line x1="0" y1="0" x2="420" y2="0"/><line x1="0" y1="67.5" x2="420" y2="67.5"/>
+      <line x1="0" y1="135" x2="420" y2="135"/><line x1="0" y1="202.5" x2="420" y2="202.5"/>
+    </g>
+    <g font-size="11" fill="#8A96AE" font-family="'IBM Plex Mono', monospace" text-anchor="end">
+      <text x="-8" y="4">100%</text><text x="-8" y="71">75%</text>
+      <text x="-8" y="139">50%</text><text x="-8" y="206">25%</text><text x="-8" y="274">0%</text>
+    </g>
+    <!-- bias 1.0 -> 44.5, .75 -> 57.1, .5 -> 67.3, .25 -> 77.2, 0 -> 81.9 ; x from bias1(left) to bias0(right) -->
+    <polyline fill="none" stroke="#35C2A5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+      points="0,149.8 105,115.8 210,88.3 315,61.6 420,48.9"/>
+    <g fill="#35C2A5">
+      <circle cx="0" cy="149.8" r="5"/><circle cx="105" cy="115.8" r="5"/><circle cx="210" cy="88.3" r="5"/>
+      <circle cx="315" cy="61.6" r="5"/><circle cx="420" cy="48.9" r="5"/>
+    </g>
+    <g font-size="11" fill="#D6DEEE" font-family="'IBM Plex Mono', monospace" text-anchor="middle">
+      <text x="0" y="141">44.5%</text><text x="420" y="40">81.9%</text>
+    </g>
+    <!-- the floor: star = 0% -->
+    <line x1="0" y1="270" x2="420" y2="270" stroke="#E8A33D" stroke-width="3"/>
+    <circle cx="0" cy="270" r="5" fill="#E8A33D"/><circle cx="210" cy="270" r="5" fill="#E8A33D"/><circle cx="420" cy="270" r="5" fill="#E8A33D"/>
+    <text x="210" y="262" font-size="11.5" fill="#E8A33D" font-family="'IBM Plex Mono', monospace" text-anchor="middle">pure star (one payer, no receivables) = 0% — batching wins here</text>
+    <g font-size="11" fill="#8A96AE" font-family="'IBM Plex Mono', monospace" text-anchor="middle">
+      <text x="0" y="290">strict hierarchy</text><text x="210" y="290">mixed</text><text x="420" y="290">fully reciprocal</text>
+      <text x="210" y="310" fill="#4C5B78">flow structure</text>
+    </g>
+  </g>
+
+  <text x="46" y="452" font-size="12.5" fill="#8A96AE" font-family="'IBM Plex Mono', monospace">Scale-invariant: 4 → 60 agents at fixed density all land 81–84%. Benefit tracks density and reciprocity, not agent count.</text>
+</svg>

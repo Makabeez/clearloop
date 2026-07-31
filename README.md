@@ -98,6 +98,28 @@ npm run credit   # another
   → Dave repays. debt $0 · reserve back to $100
 ```
 
+## Honest limits (read this)
+
+**Netting frees 0% on a pure star.** One agent paying many sellers with nothing coming
+back has nothing to offset — there, Circle's buyer-side batching is strictly the better
+tool. Clearloop earns its place only when agents both earn and spend.
+
+Measured, not asserted — reproduce with `npm run sweep`:
+
+| flow structure | capital freed |
+|---|---:|
+| pure star (no receivables) | **0%** |
+| strict hierarchy, no cycles at all | 44.5% |
+| mixed | 67.3% |
+| fully reciprocal | **81.9%** |
+
+Note the second row: a graph with **no cycles** still frees 44.5%, because each middle
+agent's receivable offsets its own payable. Cycle-cancellation isn't where the value is —
+that's why this beats per-payer batching without needing exotic circular trade.
+
+Full sweep, the density and scale curves, and an explicit real-vs-simulated accounting:
+**[BENCHMARKS.md](BENCHMARKS.md)**.
+
 ## Visual hero
 
 `web/index.html` — open in a browser (no build). Hit **Run clearing epoch**: the gross obligation mesh collapses into net settlement arcs, agents recolor by net position, and the ledger counts up to the capital-freed figure. Toggle **Dense · 15 agents** for the 88.8% view.
