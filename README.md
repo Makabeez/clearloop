@@ -8,6 +8,12 @@
   <img src=".github/assets/badge-x402.svg" alt="x402 · Nanopayments-compatible">
 </p>
 
+<p align="center">
+  <b><a href="https://clearloop-makabeezs-projects.vercel.app">▶ Live demo</a></b> &nbsp;·&nbsp;
+  <a href="https://testnet.arcscan.app/address/0xe8e5adC9054eFFf87c4334596695176cA1d56fe2">ClearingHouse on Arc</a> &nbsp;·&nbsp;
+  <a href="BENCHMARKS.md">Benchmarks &amp; honest limits</a>
+</p>
+
 **Multilateral clearing for the agent economy — settle the net, not the gross.** Autonomous agents are buyers *and* sellers at once, so their mutual obligations form a graph, not a line. Clearloop offsets every agent's receivables against its payables across that graph and settles only net USDC on Arc — freeing the working capital that per-payer batching leaves locked.
 
 This is the app repo (netting engine, coordinator, agents, UI). Contracts live in [`clearloop-kit`](https://github.com/Makabeez/clearloop-kit).
