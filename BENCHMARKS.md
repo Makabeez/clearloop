@@ -112,7 +112,7 @@ Written before anyone asks.
 | Contract test suite | **REAL** | 10 Foundry tests incl. credit draw, over-limit, reserve shortfall, repay, liquidate |
 | x402 payment flow | **REAL protocol, LOCAL peers** | Genuine HTTP 402 round-trips with signed payloads; the seller agents are local processes, not remote third parties |
 | Credit facility | **REAL mechanism, SEEDED inputs** | Draw/repay/liquidate all execute on-chain; the credit *limit* is owner-set, not yet derived from settlement history |
-| Agent wallets | **REAL** | Circle Developer-Controlled Wallets on Arc testnet (EOA); obligations signed via Circle `signTypedData` — no key material in the agent process |
+| Agent wallets | **REAL** | Circle Developer-Controlled Wallets on Arc testnet (EOA). Collateral posted via Circle contract-execution, obligations signed via Circle `signTypedData` — no key material in the agent process. Proof: [epoch 21 settlement](https://testnet.arcscan.app/tx/0x9eece216d5a2cec27b759911e3eb5abc7c1710ef4f7dec497082c66c865cc477) |
 | Agent decision-making | **SIMULATED** | Agents follow scripted buy/sell patterns. No LLM in the loop |
 | Obligation graphs | **SIMULATED** | Synthetic, seeded generators — no real agent payment traffic exists to sample yet |
 | Capital-freed percentages | **MEASURED on simulated graphs** | Reproducible sweep above; honest about the input being synthetic |

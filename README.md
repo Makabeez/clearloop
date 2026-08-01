@@ -123,6 +123,27 @@ npm run circle:setup     # creates a wallet set + one EOA wallet per agent on Ar
 npm run circle:demo      # agents sign via Circle → graph netted → settled on Arc
 ```
 
+Proven end-to-end on Arc testnet:
+
+```
+  agents hold Circle Developer-Controlled Wallets (no local keys):
+    Alice  0xb46bf49f…63207   20 USDC
+    Bob    0xe78afd24…6e3d0   20 USDC
+    Carol  0x8624a7eb…5cd5e   20 USDC
+
+  posting collateral through Circle…   Alice $5 · Bob $5 · Carol $5
+  5 obligations signed by Circle, all signatures verified
+
+  ── epoch 21 settled ──
+  gross $7.75 → net $1.25 · 83.9% capital freed
+```
+
+Settlement transaction: [`0x9eece216…cc477`](https://testnet.arcscan.app/tx/0x9eece216d5a2cec27b759911e3eb5abc7c1710ef4f7dec497082c66c865cc477)
+
+Collateral is posted through Circle's contract-execution API and obligations are
+signed through `signTypedData`, so **no private key exists anywhere in this process** —
+Circle custodies the key material end to end.
+
 Wallets are created as **EOA, not SCA**, on purpose: `ClearingHouse.settleEpoch`
 verifies with `ecrecover`, which only recovers EOA signers (an SCA would require
 EIP-1271). The demo also re-verifies each Circle signature locally before
