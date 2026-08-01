@@ -86,8 +86,8 @@ export async function verifyPayment(
     types: OBLIGATION_TYPES,
     primaryType: "Obligation",
     message: {
-      debtor: ob.debtor,
-      creditor: ob.creditor,
+      debtor: ob.debtor as Address,
+      creditor: ob.creditor as Address,
       amount: ob.amount,
       nonce: ob.nonce,
       epochId: ob.epochId,

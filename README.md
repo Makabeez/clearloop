@@ -104,6 +104,33 @@ npm run credit   # another
   → Dave repays. debt $0 · reserve back to $100
 ```
 
+## Circle Developer-Controlled Wallets
+
+Agents hold real Circle wallets on Arc testnet and sign their obligations through
+Circle's `signTypedData` endpoint — **no private key ever exists in the agent
+process**. Circle custodies the key material behind an entity secret; the agent
+only asks for a signature.
+
+This fits Clearloop's architecture exactly: agents never send transactions, they
+only *authorize*. The coordinator submits one net settlement. So the signing
+authority is swappable and the clearing layer is untouched — a Circle-signed
+obligation verifies inside `settleEpoch` byte-for-byte like a locally-signed one.
+
+```bash
+# 1. API key + entity secret from console.circle.com, into .env
+npm run circle:setup     # creates a wallet set + one EOA wallet per agent on Arc
+# 2. fund each printed address at https://faucet.circle.com (Arc Testnet)
+npm run circle:demo      # agents sign via Circle → graph netted → settled on Arc
+```
+
+Wallets are created as **EOA, not SCA**, on purpose: `ClearingHouse.settleEpoch`
+verifies with `ecrecover`, which only recovers EOA signers (an SCA would require
+EIP-1271). The demo also re-verifies each Circle signature locally before
+submitting, so a mismatch fails loudly instead of as an opaque revert.
+
+Circle's own reference pattern for autonomous payments is Wallets + USDC + x402.
+Clearloop uses exactly that, and adds multilateral clearing on top.
+
 ## Honest limits (read this)
 
 **Netting frees 0% on a pure star.** One agent paying many sellers with nothing coming

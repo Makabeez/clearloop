@@ -10,15 +10,19 @@
     "coordinator": "tsx src/coordinator-server.ts",
     "x402": "tsx src/x402-demo.ts",
     "credit": "tsx src/credit-demo.ts",
-    "sweep": "tsx src/sweep.ts"
+    "sweep": "tsx src/sweep.ts",
+    "circle:setup": "tsx src/circle-setup.ts",
+    "circle:demo": "tsx src/circle-demo.ts",
+    "circle:register": "tsx src/circle-register.ts"
   },
   "dependencies": {
+    "@circle-fin/developer-controlled-wallets": "^10.8.0",
     "viem": "^2.21.0"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0",
-    "vitest": "^2.1.0",
-    "@types/node": "^22.0.0"
+    "vitest": "^2.1.0"
   }
 }
